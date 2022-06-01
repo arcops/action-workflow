@@ -1,0 +1,37 @@
+name: Create Tag/Release
+
+on:
+  push:
+    branches:
+      - pre-prod
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate CHANGELOG
+        env:
+          CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gem install github_changelog_generator
+	  github_changelog_generator -u archanaserver -p action-workflow-push
+      - name: Commit files
+        run: |
+          git config --local user.email "$GITHUB_EMAIL"
+          git config --local user.name "$GITHUB_USERNAME"
+          git commit -m "doc(CHANGELOG): update" -a
+        env:
+          GITHUB_USERNAME: archanaserver
+          GITHUB_EMAIL: ak31960466@gmail.com
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+          VERSION: ${{ steps.tag_version.outputs.new_tag }}
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          repository: archanaserver/action-workflow-push
