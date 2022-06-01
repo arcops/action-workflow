@@ -15,7 +15,7 @@ jobs:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gem install github_changelog_generator
-	  github_changelog_generator -u archanaserver -p action-workflow-push
+	        github_changelog_generator -u archanaserver -p action-workflow-push
       - name: Commit files
         run: |
           git config --local user.email "$GITHUB_EMAIL"
