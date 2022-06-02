@@ -40,26 +40,6 @@ jobs:
         with:
           github_token: ${{ secrets.SECRET_GITHUB_TOKEN }}
           branch: ${{ github.ref }}
-      - name: Checkout feedstock fork
-        uses: actions/checkout@v2
-        with:
-          repository: archanaserver/action-workflow-push
-          persist-credentials: false
-          fetch-depth: 0
-      - name: Update recipe
-        run: |
-          wget -O- https://github.com/brsynth/brs-utils/archive/refs/tags/$VERSION.tar.gz | shasum -a 256 > sha.txt
-          sha=`python -c "f = open('sha.txt'); print(f.read().split()[0]); f.close()"`
-          rm -f sha.txt
-          sed -i -E "s/(\{% set version = \")[^>]+(\" %\})/\1somethin\2/" recipe/meta.yaml
-          sed -i -E "s/(sha256: )[^>]+/\1$sha/" recipe/meta.yaml
-          git config --local user.email "$GITHUB_EMAIL"
-          git config --local user.name "$GITHUB_USERNAME"
-          git commit -m "chore(meta.yml): update version" -a
-        env:
-          GITHUB_USERNAME: archanaserver
-          GITHUB_EMAIL: ak31960466@gmail.com
-          VERSION: ${{ steps.tag_version.outputs.new_tag }}
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
