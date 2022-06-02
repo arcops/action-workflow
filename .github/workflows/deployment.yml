@@ -23,7 +23,7 @@ jobs:
           tag_prefix:
       - name: Generate CHANGELOG
         env:
-          CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CHANGELOG_GITHUB_TOKEN: ${{ secrets.SECRET_GITHUB_TOKEN }}
         run: |
           gem install github_changelog_generator
           github_changelog_generator -u archanaserver -p action-workflow
@@ -38,7 +38,7 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.SECRET_GITHUB_TOKEN }}
           branch: ${{ github.ref }}
       - name: Checkout feedstock fork
         uses: actions/checkout@v2
