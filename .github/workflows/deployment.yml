@@ -3,7 +3,7 @@ name: Create Tag/Release
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
 
@@ -18,12 +18,12 @@ jobs:
         id: tag_version
         uses: mathieudutour/github-tag-action@v5.6
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: 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
           release_branches: stable
           tag_prefix:
       - name: Generate CHANGELOG
         env:
-          CHANGELOG_GITHUB_TOKEN: ${{ secrets.SECRET_GITHUB_TOKEN }}
+          CHANGELOG_GITHUB_TOKEN: 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
         run: |
           gem install github_changelog_generator
           github_changelog_generator -u archanaserver -p action-workflow
