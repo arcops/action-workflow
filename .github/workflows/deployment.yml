@@ -1,4 +1,4 @@
-name: Create Tag/Release
+name: create pre pod workflow
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
           CHANGELOG_GITHUB_TOKEN: ${{ secrets.ACCESS_GITHUB_TOKEN }}
         run: |
           gem install github_changelog_generator
-	        github_changelog_generator -u archanaserver -p action-workflow-push
+	  github_changelog_generator -u archanaserver -p action-workflow-push
       - name: Commit files
         run: |
           git config --local user.email "$GITHUB_EMAIL"
