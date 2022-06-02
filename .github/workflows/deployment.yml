@@ -1,4 +1,4 @@
-name: Create Tag/Release
+name: Create Workflow
 
 on:
   push:
