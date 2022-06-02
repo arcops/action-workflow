@@ -3,7 +3,7 @@ name: Create Tag/Release
 on:
   push:
     branches:
-      - stable
+      - main
 
 jobs:
 
@@ -35,12 +35,12 @@ jobs:
         env:
           GITHUB_USERNAME: archanaserver
           GITHUB_EMAIL: ak3196046@gmail.com
-      - name: Push changes
+      - name: Push changes from
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.SECRET_GITHUB_TOKEN }}
           branch: ${{ github.ref }}
-      - name: Push changes
+      - name: Push changes to
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
