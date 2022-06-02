@@ -40,4 +40,3 @@ jobs:
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           repository: archanaserver/action-workflow-push
 
-# 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
