@@ -1,0 +1,104 @@
+name: Pull Request Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, closed]
+    branches:
+      - main
+    paths:
+      - "deployments/**"
+  workflow_dispatch:
+
+jobs:
+  create-deployment-preview:
+    if: github.event.action == 'opened'
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./deployments
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Initial Deployment Preview Comment
+        uses: peter-evans/create-or-update-comment@v1.4.5
+        id: pr-preview-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ### Building Deployment Preview..
+            A preview of this Pull Request is being created. Hold tight while it's building ⚒️
+            This comment will be automatically updated when the preview is ready.
+
+      - name: Set up Node.js version
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+
+      - name: npm install, build, and test
+        run: |
+          npm install
+          npm run build --if-present
+          npm run test --if-present
+
+      - name: Update PR Preview Comment
+        uses: peter-evans/create-or-update-comment@v1.4.5
+        with:
+          comment-id: ${{ steps.pr-preview-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            ### Deployment Preview
+            Preview this PR: https://cicd-demo-app-preview-pr-${{ github.event.pull_request.number }}.<host>
+            Commit SHA: ${{ github.sha }}
+
+  update-deployment-preview:
+    if: github.event.action == 'synchronize'
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./deployments
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Find PR Preview Comment
+        uses: peter-evans/find-comment@v1
+        id: deploy-preview-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "github-actions[bot]"
+          body-includes: Deployment Preview
+
+      - name: Update PR Preview Comment
+        if: steps.deploy-preview-comment.outputs.comment-id != ''
+        uses: peter-evans/create-or-update-comment@v1.4.5
+        with:
+          comment-id: ${{ steps.deploy-preview-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            ### Building Deployment Preview..
+            The Pull Request preview is being updated. Hold tight while it's building ⚒️
+            This comment will be automatically updated when the new version is ready.
+
+      - name: Set up Node.js version
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+
+      - name: npm install, build, and test
+        run: |
+          npm install
+          npm run build --if-present
+          npm run test --if-present
+
+      - name: Update PR Preview Comment
+        uses: peter-evans/create-or-update-comment@v1.4.5
+        with:
+          comment-id: ${{ steps.deploy-preview-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            ### Deployment Preview
+            Preview this PR: https://cicd-demo-app-preview-pr-${{ github.event.pull_request.number }}.<host>
+            Commit SHA: ${{ github.sha }}
