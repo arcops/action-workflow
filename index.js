@@ -36,8 +36,7 @@ const main = async () => {
       issue_number: pr_number,
       commitHash,
       body: `
-        Preview url  \n
-        Pull Request #${pr_number} has been updated with: \n
+        Preview Deployment URL #${commitHash} has been updated with: \n
         - ${diffData.changes} changes \n
         - ${diffData.additions} additions \n
         - ${diffData.deletions} deletions \n
