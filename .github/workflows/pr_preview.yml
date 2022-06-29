@@ -17,3 +17,4 @@ jobs:
           repo: ${{ github.event.repository.name }}
           pr_number: ${{ github.event.number }}
           token: ${{ secrets.SECRET_GITHUB_ACCESS_TOKEN }}
+          commitHash: git_hash=$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_HASH
