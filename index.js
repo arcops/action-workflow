@@ -1,13 +1,11 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-//const git = require('git-last-commit');
-
 
 var revision = require('child_process')
   .execSync('git rev-parse HEAD')
   .toString().trim()
 
-console.log(revision)
+//console.log(revision)
 
 var commitId = revision.slice(0, 7)
 console.log(commitId)
@@ -52,7 +50,7 @@ const main = async () => {
       issue_number: pr_number,
       commitHash,
       body: `
-        Preview Deployment URL #${shortCommitHash} has been updated with: \n
+        Preview Deployment URL ${shortCommitHash} has been updated with: \n
         - ${diffData.changes} changes \n
         - ${diffData.additions} additions \n
         - ${diffData.deletions} deletions \n
