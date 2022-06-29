@@ -1,6 +1,5 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-//const git = require('git-last-commit');
 
 
 var revision = require('child_process')
